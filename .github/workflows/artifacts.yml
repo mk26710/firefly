@@ -19,7 +19,7 @@ jobs:
         run: make build_linux
 
       - name: Build for Windows
-        run: make build_windows
+        run: make build_win
 
       - name: Linux amd64 Artifact
         uses: actions/upload-artifact@v3

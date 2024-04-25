@@ -24,23 +24,23 @@ jobs:
       - name: Linux amd64 Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: firefly-amd64-{{ $github.sha }}
+          name: firefly-amd64-${{ github.sha }}
           path: .output/firefly-amd64
 
       - name: Linux arm64 Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: firefly-arm64-{{ $github.sha }}
+          name: firefly-arm64-${{ github.sha }}
           path: .output/firefly-arm64
 
       - name: Windows amd64 Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: firefly-amd64-{{ $github.sha }}.exe
+          name: firefly-amd64-${{ github.sha }}.exe
           path: .output/firefly-amd64.exe
 
       - name: Windows arm64 Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: firefly-arm64-{{ $github.sha }}.exe
+          name: firefly-arm64-${{ github.sha }}.exe
           path: .output/firefly-arm64.exe

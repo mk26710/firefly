@@ -1,0 +1,46 @@
+name: Build Artifacts
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.22.2"
+
+      - name: Build for Linux
+        run: make build_linux
+
+      - name: Build for Windows
+        run: make build_windows
+
+      - name: Linux amd64 Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: firefly-amd64-{{ $github.sha }}
+          path: .output/firefly-amd64
+
+      - name: Linux arm64 Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: firefly-arm64-{{ $github.sha }}
+          path: .output/firefly-arm64
+
+      - name: Windows amd64 Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: firefly-amd64-{{ $github.sha }}.exe
+          path: .output/firefly-amd64.exe
+
+      - name: Windows arm64 Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: firefly-arm64-{{ $github.sha }}.exe
+          path: .output/firefly-arm64.exe

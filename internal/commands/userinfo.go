@@ -62,7 +62,7 @@ func (h *UserInfoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionC
 	if len(target.GlobalName) > 0 {
 		embed.Fields = append(embed.Fields,
 			&discordgo.MessageEmbedField{
-				Name:  "Display Name",
+				Name:  "Name",
 				Value: target.GlobalName,
 			},
 		)

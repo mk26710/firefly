@@ -44,7 +44,18 @@ func main() {
 
 	bot.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		if cmd, ok := appCommands[i.ApplicationCommandData().Name]; ok {
-			cmd.Handle(s, i)
+			err := cmd.Handle(s, i)
+			if err != nil {
+				log.Printf("an error happened while executing %s:\n%v\n", cmd.Meta().Name, err)
+
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: ":warning: Unexpected error has occured during execution of the command.",
+						Flags:   discordgo.MessageFlagsEphemeral,
+					},
+				})
+			}
 		}
 	})
 

@@ -109,14 +109,14 @@ func (h *SaucenaoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionC
 	}
 
 	for i, extURL := range topResult.Data.ExtURLs {
-		if len(rows[len(rows)-1].Components) == 3 {
+		if len(rows[len(rows)-1].Components) == 5 {
 			rows = append(rows, discordgo.ActionsRow{})
 		}
 
 		if len(extURL) > 0 {
 			rows[len(rows)-1].Components = append(rows[len(rows)-1].Components, discordgo.Button{
 				URL:   extURL,
-				Label: fmt.Sprintf("External URL #%v", i+1),
+				Label: fmt.Sprintf("Mirror #%v", i+1),
 				Style: discordgo.LinkButton,
 			})
 		}

@@ -43,10 +43,10 @@ type SaucenaoResultData struct {
 	DanbooruID int      `json:"danbooru_id"`
 	YandereID  int      `json:"yandere_id"`
 	GelbooruID int      `json:"gelbooru_id"`
-	Creator    string   `json:"creator"`
-	Material   string   `json:"material"`
-	Characters string   `json:"characters"`
-	SourceURL  string   `json:"source"`
+	// Creator    string   `json:"creator"` for some reason this can be []string instead :/
+	Material   string `json:"material"`
+	Characters string `json:"characters"`
+	SourceURL  string `json:"source"`
 }
 
 type QueryParams struct {

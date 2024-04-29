@@ -68,12 +68,11 @@ func (h *SaucenaoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionC
 	re := discordgo.MessageEmbed{}
 	re.Thumbnail = &discordgo.MessageEmbedThumbnail{URL: topResult.Header.ThumbnailURL}
 	re.Title = topResult.Header.IndexName
-	re.Author = &discordgo.MessageEmbedAuthor{Name: fmt.Sprintf("Similarity rate is %s", topResult.Header.Similarity)}
 
-	if len(topResult.Data.Creator) > 0 {
+	if len(topResult.Header.Similarity) > 0 {
 		re.Fields = append(re.Fields, &discordgo.MessageEmbedField{
-			Name:  "Creator",
-			Value: topResult.Data.Creator,
+			Name:  "Similarity",
+			Value: topResult.Header.Similarity,
 		})
 	}
 

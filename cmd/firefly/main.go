@@ -30,6 +30,7 @@ func main() {
 
 	appCommands := map[string]FireflyCommand{
 		"userinfo": &commands.UserInfoHandler{},
+		"saucenao": &commands.SaucenaoHandler{},
 	}
 
 	bot, err := discordgo.New("Bot " + os.Getenv("DISCORD_TOKEN"))

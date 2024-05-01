@@ -4,6 +4,7 @@ import (
 	"firefly/internal/utils/sauce"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -87,6 +88,13 @@ func (h *SaucenaoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionC
 		re.Fields = append(re.Fields, &discordgo.MessageEmbedField{
 			Name:  "Material",
 			Value: topResult.Data.Material,
+		})
+	}
+
+	if len(topResult.Data.Creators) > 0 {
+		re.Fields = append(re.Fields, &discordgo.MessageEmbedField{
+			Name:  "Creators",
+			Value: strings.Join(topResult.Data.Creators, "\n"),
 		})
 	}
 

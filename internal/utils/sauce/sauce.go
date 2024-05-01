@@ -43,10 +43,50 @@ type SaucenaoResultData struct {
 	DanbooruID int      `json:"danbooru_id"`
 	YandereID  int      `json:"yandere_id"`
 	GelbooruID int      `json:"gelbooru_id"`
-	// Creator    string   `json:"creator"` for some reason this can be []string instead :/
-	Material   string `json:"material"`
-	Characters string `json:"characters"`
-	SourceURL  string `json:"source"`
+	Creators   []string `json:"creator"`
+	Material   string   `json:"material"`
+	Characters string   `json:"characters"`
+	SourceURL  string   `json:"source"`
+}
+
+func (s *SaucenaoResultData) UnmarshalJSON(data []byte) error {
+	var t struct {
+		ExtURLs    []string        `json:"ext_urls"`
+		DanbooruID int             `json:"danbooru_id"`
+		YandereID  int             `json:"yandere_id"`
+		GelbooruID int             `json:"gelbooru_id"`
+		Creators   json.RawMessage `json:"creator"`
+		Material   string          `json:"material"`
+		Characters string          `json:"characters"`
+		SourceURL  string          `json:"source"`
+	}
+
+	if err := json.Unmarshal(data, &t); err != nil {
+		return err
+	}
+
+	if len(t.Creators) > 2 && t.Creators[0] == byte('[') && t.Creators[len(t.Creators)-1] == byte(']') {
+		if err := json.Unmarshal(t.Creators, &s.Creators); err != nil {
+			return err
+		}
+	} else if len(t.Creators) > 0 {
+		var creator string
+		if err := json.Unmarshal(t.Creators, &creator); err != nil {
+			return err
+		}
+
+		s.Creators = []string{creator}
+	}
+
+	s.ExtURLs = t.ExtURLs
+	s.DanbooruID = t.DanbooruID
+	s.YandereID = t.YandereID
+	s.GelbooruID = t.GelbooruID
+	s.Material = t.Material
+	s.Characters = t.Characters
+	s.SourceURL = t.SourceURL
+
+	return nil
 }
 
 type QueryParams struct {

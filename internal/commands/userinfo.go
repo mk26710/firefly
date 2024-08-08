@@ -27,8 +27,8 @@ func (h *UserInfoHandler) Meta() *discordgo.ApplicationCommand {
 			},
 			{
 				Type:        discordgo.ApplicationCommandOptionBoolean,
-				Name:        "private",
-				Description: "Whether if you'd like to hide the response",
+				Name:        "public",
+				Description: "Whether if you'd like to show the response to everyone",
 				Required:    false,
 			},
 		},
@@ -38,7 +38,7 @@ func (h *UserInfoHandler) Meta() *discordgo.ApplicationCommand {
 func (h *UserInfoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 	options := i.ApplicationCommandData().Options
 
-	var private bool
+	var public bool
 	var target *discordgo.User
 
 	for _, option := range options {
@@ -46,8 +46,8 @@ func (h *UserInfoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionC
 			target = option.UserValue(s)
 		}
 
-		if option.Type == discordgo.ApplicationCommandOptionBoolean && option.Name == "private" {
-			private = option.BoolValue()
+		if option.Type == discordgo.ApplicationCommandOptionBoolean && option.Name == "public" {
+			public = option.BoolValue()
 		}
 	}
 
@@ -94,7 +94,7 @@ func (h *UserInfoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionC
 
 	var flags discordgo.MessageFlags
 
-	if private {
+	if !public {
 		flags = discordgo.MessageFlagsEphemeral
 	}
 

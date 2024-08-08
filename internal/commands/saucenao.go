@@ -23,6 +23,12 @@ func (h *SaucenaoHandler) Meta() *discordgo.ApplicationCommand {
 				Description: "Image URL to use in saucenao search",
 				Required:    true,
 			},
+			{
+				Type:        discordgo.ApplicationCommandOptionBoolean,
+				Name:        "public",
+				Description: "Whether if you'd like to show the response to everyone",
+				Required:    false,
+			},
 		},
 	}
 }
@@ -30,10 +36,27 @@ func (h *SaucenaoHandler) Meta() *discordgo.ApplicationCommand {
 func (h *SaucenaoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionCreate) error {
 	options := i.ApplicationCommandData().Options
 
-	urlRaw := options[0].StringValue()
+	var public bool
+	var urlRaw string
+
+	for _, option := range options {
+		if option.Type == discordgo.ApplicationCommandOptionString && option.Name == "url" {
+			urlRaw = option.StringValue()
+		}
+
+		if option.Type == discordgo.ApplicationCommandOptionBoolean && option.Name == "public" {
+			public = option.BoolValue()
+		}
+	}
+
 	queryUrl, err := url.Parse(urlRaw)
 	if err != nil {
 		return err
+	}
+
+	var flags discordgo.MessageFlags
+	if !public {
+		flags = discordgo.MessageFlagsEphemeral
 	}
 
 	ch, err := s.Channel(i.ChannelID)
@@ -55,6 +78,7 @@ func (h *SaucenaoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionC
 		return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
+				Flags:   flags,
 				Content: "There are no results.",
 			},
 		})
@@ -138,6 +162,7 @@ func (h *SaucenaoHandler) Handle(s *discordgo.Session, i *discordgo.InteractionC
 	return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
+			Flags:      flags,
 			Embeds:     []*discordgo.MessageEmbed{&qe, &re},
 			Components: components,
 		},

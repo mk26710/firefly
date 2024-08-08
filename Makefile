@@ -9,3 +9,6 @@ build_win:
 	GOARCH=arm64 GOOS=windows go build -o .output/${PROJECT_NAME}-arm64.exe -ldflags "-s -w" cmd/${PROJECT_NAME}/main.go
 
 build: build_linux build_win
+
+dev:
+	go run cmd/${PROJECT_NAME}/main.go
